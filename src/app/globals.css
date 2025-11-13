@@ -1,0 +1,112 @@
+/* ===== Global Reset (next default can be removed) ===== */
+:root{
+  --bg:#0b0c0f; --fg:#e8e9ee; --muted:#a6a8b3; --card:#151821;
+  --border:#2a2f3a; --brand:#9aa6ff; --accent:#7bd7ff;
+}
+*{box-sizing:border-box}
+html,body{
+  margin:0; padding:0; background:var(--bg); color:var(--fg);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,"Noto Sans Arabic","Segoe UI Emoji",sans-serif
+}
+
+/* ===== Layout ===== */
+.app-header,.app-footer{border-bottom:1px solid var(--border)}
+.app-footer{border-top:1px solid var(--border);border-bottom:none;margin-top:24px;padding:16px 0;color:var(--muted)}
+.app-header{padding:12px 0}
+.app-container{width:min(1200px,92vw);margin:0 auto}
+.brand{margin:0;font-size:32px;color:var(--brand);letter-spacing:.3px;font-weight: bold;
+  text-transform: uppercase;}
+
+/* ===== Home page ===== */
+.page-head{display:flex;align-items:center;justify-content:space-between;margin:24px 0}
+.btn{display:inline-flex;align-items:center;justify-content:center;padding:10px 14px;background:var(--brand);color:#0a0b0f;border:none;border-radius:8px;text-decoration:none;font-weight:600;cursor:pointer}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:0;overflow:hidden}
+.card-head{padding:12px 16px;border-bottom:1px solid var(--border)}
+.card-head h3{margin:0;font-size:14px;color:var(--accent)}
+.card-body{padding:16px}
+.card-foot{padding:12px 16px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px}
+.list{display:flex;flex-direction:column}
+.list-row{display:grid;grid-template-columns:1fr auto;align-items:center;padding:12px 16px;border-top:1px solid var(--border)}
+.list-row:first-child{border-top:none}
+.list-col.meta{color:var(--muted);font-size:12px}
+.link{color:var(--fg);text-decoration:none}
+.link:hover{text-decoration:underline}
+.label{display:block;margin-bottom:8px;font-size:13px;color:var(--muted)}
+.input{width:100%;padding:10px 12px;background:#0f1117;color:var(--fg);border:1px solid var(--border);border-radius:8px;resize:vertical}
+.placeholder{color:var(--muted);line-height:1.7}
+
+/* ===== Document page ===== */
+.doc-page{display:grid;gap:16px}
+.doc-title h2{margin:16px 0;font-size:18px}
+.doc-grid{display:grid;grid-template-columns:1fr 2fr;gap:16px}
+.doc-left,.doc-right{display:grid;gap:16px}
+.doc-right-grid{display:grid;grid-template-columns:2fr 1fr;gap:16px}
+.preview-wrap,.policies-wrap{display:grid}
+.policies{margin:0;padding-left:16px}
+.policies li{margin:6px 0;color:var(--fg)}
+
+/* ===== Responsive ===== */
+@media (max-width:1100px){.doc-right-grid{grid-template-columns:1fr}}
+@media (max-width:800px){.doc-grid{grid-template-columns:1fr}}
+/* ===== 3-column layout with fixed named areas ===== */
+.doc-grid-3 {
+  display: grid;
+  grid-template-columns:
+    minmax(280px, 1fr)     /* policies (يسار) */
+    minmax(520px, 1.6fr)   /* preview (وسط) */
+    minmax(340px, 1.2fr);  /* agent (يمين) */
+  grid-template-areas: "pol preview agent";
+  gap: 24px;
+  align-items: start;
+}
+
+/* ربط كل عمود بمنطقته المحددة */
+.policies-col { grid-area: pol; }
+.preview-col  { grid-area: preview; }
+.agent-col    { grid-area: agent; }
+
+/* الحقول تأخذ العرض الكامل */
+.policies-col .policies-box textarea,
+.agent-col .agent-box textarea {
+  width: 100%;
+  display: block;
+  min-height: 120px;
+  box-sizing: border-box;
+}
+
+/* الصندوق نفسه يمتد بعرض العمود */
+.agent-col .agent-box,
+.policies-col .policies-box {
+  width: 100%;
+}
+/* اجعل الشبكة بطول الصفحة */
+.doc-grid-3 {
+  display: grid;
+  grid-template-columns:
+    minmax(320px, 1fr)     /* policies (يسار) */
+    minmax(520px, 1.6fr)   /* preview (وسط) */
+    minmax(340px, 1.2fr);  /* agent (يمين) */
+  grid-template-areas: "pol preview agent";
+  gap: 24px;
+  align-items: stretch; /* ← النقطة الأساسية: تمد الأعمدة بالطول */
+  min-height: calc(100vh - 160px); /* ← يملاً الشاشة تقريباً */
+}
+
+/* خلي كل صندوق يتمدّد لطول العمود */
+.policies-box,
+.agent-box,
+.preview-wrap {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* خففي المسافات داخل textarea عشان يملأ بشكل جميل */
+.policies-box textarea,
+.agent-box textarea {
+  flex: 1;
+  width: 100%;
+  resize: vertical;
+  min-height: 200px; /* حد أدنى مريح */
+}

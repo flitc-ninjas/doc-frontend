@@ -1,0 +1,53 @@
+/* ===== Elegant Layout for Document Editor ===== */
+
+.doc-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #000;
+  min-height: 100vh;
+  padding: 20px 0;
+}
+
+/* الشبكة الرئيسية */
+.docGrid {
+  display: grid;
+  grid-template-columns:
+    minmax(320px, 1fr)     /* AgentBox - أعرض من الرولز */
+    minmax(640px, 2fr)     /* Preview - أكبر واحد */
+    minmax(260px, 0.8fr);  /* PoliciesBox - أصغر */
+  gap: 24px;
+  align-items: stretch;
+  justify-content: center;
+  width: 95%;
+  max-width: 1400px;
+  height: 85vh; /* يملأ أغلب الصفحة */
+}
+
+/* الصناديق نفسها */
+.docGrid > div {
+  background: #0d0d0d;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  color: white;
+}
+
+/* التأكد أن المحتوى يملأ الطول */
+.docGrid textarea,
+.previewWrap {
+  flex: 1;
+  height: 100%;
+  background: transparent;
+  color: white;
+}
+
+/* تحسين العنوان داخل الصفحة */
+.title h2,
+.title h3,
+.title h4 {
+  color: #b2b2ff;
+  margin-top: 0;
+}
