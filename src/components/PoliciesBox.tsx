@@ -1,3 +1,4 @@
+// src/components/PoliciesBox.tsx
 "use client";
 
 import React from "react";
@@ -16,14 +17,14 @@ export default function PoliciesBox({ value, onChange }: PoliciesBoxProps) {
         height: "100%",
       }}
     >
-      {/* العنوان بدون أي margin */}
+      {/* العنوان */}
       <h3
         style={{
-          margin: "0 0 4px 0", // صفر فوق وتحت مسافة خفيفة جداً تحت
+          margin: "0 0 4px 0",
           padding: 0,
           fontSize: "16px",
           fontWeight: "600",
-          color: "#b2b2ff",
+          color: "#2563eb",
           textAlign: "center",
         }}
       >
@@ -41,13 +42,15 @@ export default function PoliciesBox({ value, onChange }: PoliciesBoxProps) {
           overflowY: "scroll",
           scrollbarWidth: "thin",
           width: "100%",
-          background: "transparent",
-          border: "1px solid #333",
+          background: "#f9fafb",
+          border: "1px solid #cbd5e1",
           borderRadius: "8px",
           padding: "10px",
-          color: "white",
+          color: "#1e293b",
           fontSize: "14px",
           resize: "none",
+          lineHeight: "1.6",
+           boxShadow: "0 4px 10px rgba(0, 0, 0, 0.08)",
         }}
       />
     </div>

@@ -16,22 +16,19 @@ export default function DocumentPage() {
   const [doc, setDoc] = useState<Doc | null>(null);
   const [policies, setPolicies] = useState<string>("");
 
-  // ✅ Load document from local storage
+  // ✅ Load document
   useEffect(() => {
-  if (!id) return;
-
-  async function fetchDoc() {
-    const found = await getDoc(id);
-    if (!found) {
-      router.push("/");
-      return;
+    if (!id) return;
+    async function fetchDoc() {
+      const found = await getDoc(id);
+      if (!found) {
+        router.push("/");
+        return;
+      }
+      setDoc(found);
     }
-    setDoc(found);
-  }
-
-  fetchDoc();
-}, [id, router]);
-
+    fetchDoc();
+  }, [id, router]);
 
   // 💾 Load and save policies
   useEffect(() => {
@@ -45,25 +42,21 @@ export default function DocumentPage() {
     localStorage.setItem(`doc-policies-${id}`, policies);
   }, [policies, id]);
 
-  // ✏️ Update document title or content
+  // ✏️ Update document
   async function update(partial: Partial<Doc>) {
-  if (!doc) return;
-
-  const next: Doc = { ...doc, ...partial };
-  setDoc(next);
-
-  try {
-    // نحفظ التعديل في قاعدة البيانات
-    await updateDoc(next.id, {
-      title: next.title,
-      content: next.content,
-      author: next.author || "Rahaf", // مؤقتًا لنجرب
-    });
-  } catch (err) {
-    console.error("Error updating doc:", err);
+    if (!doc) return;
+    const next: Doc = { ...doc, ...partial };
+    setDoc(next);
+    try {
+      await updateDoc(next.id, {
+        title: next.title,
+        content: next.content,
+        author: next.author || "Rahaf",
+      });
+    } catch (err) {
+      console.error("Error updating doc:", err);
+    }
   }
-}
-
 
   // 💾 Download document
   function downloadDoc() {
@@ -79,33 +72,31 @@ export default function DocumentPage() {
 
   // ➕ Create new document
   async function createNewDoc() {
-  try {
-    const newDoc = await createDoc({
-      title: "Untitled.md",
-      content: "# New Document\n\nWrite something...",
-      author: "Rahaf", // مؤقتاً، بنغيرها لاحقاً لما نضيف login
-    });
+    try {
+      const newDoc = await createDoc({
+        title: "Untitled.md",
+        content: "# مستند جديد\n\nابدئي بالكتابة هنا...",
+        author: "Rahaf",
+      });
 
-    if (!newDoc || !newDoc.id) {
-      alert("حدث خطأ أثناء إنشاء المستند 😥");
-      return;
+      if (!newDoc?.id) {
+        alert("حدث خطأ أثناء إنشاء المستند 😥");
+        return;
+      }
+
+      router.push(`/documents/${newDoc.id}`);
+    } catch (err) {
+      console.error("Error creating new doc:", err);
+      alert("تعذر إنشاء المستند الجديد!");
     }
-
-    // الانتقال إلى المستند الجديد بعد إنشائه
-    router.push(`/documents/${newDoc.id}`);
-  } catch (err) {
-    console.error("Error creating new doc:", err);
-    alert("تعذر إنشاء المستند الجديد!");
   }
-}
-
 
   if (!doc) return null;
   const title = doc.title || "Untitled.md";
 
   return (
     <section className={styles.docPage}>
-      {/* ====== Title + Buttons (New + Download) ====== */}
+      {/* ====== Title + Buttons ====== */}
       <div
         style={{
           display: "flex",
@@ -115,7 +106,6 @@ export default function DocumentPage() {
           marginBottom: "16px",
         }}
       >
-        {/* 📝 Document title input */}
         <input
           type="text"
           value={doc.title}
@@ -124,8 +114,8 @@ export default function DocumentPage() {
           style={{
             background: "transparent",
             border: "none",
-            borderBottom: "1px solid #555",
-            color: "#b2b2ff",
+            borderBottom: "2px solid #93c5fd",
+            color: "#2563eb",
             fontSize: "20px",
             fontWeight: "600",
             textAlign: "center",
@@ -134,56 +124,42 @@ export default function DocumentPage() {
           }}
         />
 
-        {/* ➕ New button */}
         <button
           onClick={createNewDoc}
-          style={{
-            background: "#111",
-            color: "#fff",
-            border: "1px solid #333",
-            borderRadius: "8px",
-            padding: "6px 12px",
-            cursor: "pointer",
-            fontWeight: "500",
-            transition: "background 0.2s ease",
-          }}
-          onMouseOver={(e) =>
-            ((e.target as HTMLButtonElement).style.background = "#222")
-          }
-          onMouseOut={(e) =>
-            ((e.target as HTMLButtonElement).style.background = "#111")
-          }
-        >
-          New
-        </button>
-
-        {/* 💾 Download button */}
-        <button
-          onClick={downloadDoc}
           style={{
             background: "#3b82f6",
             color: "#fff",
             border: "none",
             borderRadius: "8px",
-            padding: "6px 12px",
+            padding: "6px 14px",
             cursor: "pointer",
             fontWeight: "500",
-            transition: "background 0.2s ease",
+            boxShadow: "0 2px 4px rgba(59,130,246,0.3)",
           }}
-          onMouseOver={(e) =>
-            ((e.target as HTMLButtonElement).style.background = "#2563eb")
-          }
-          onMouseOut={(e) =>
-            ((e.target as HTMLButtonElement).style.background = "#3b82f6")
-          }
+        >
+          New
+        </button>
+
+        <button
+          onClick={downloadDoc}
+          style={{
+            background: "#10b981",
+            color: "#fff",
+            border: "none",
+            borderRadius: "8px",
+            padding: "6px 14px",
+            cursor: "pointer",
+            fontWeight: "500",
+            boxShadow: "0 2px 4px rgba(16,185,129,0.3)",
+          }}
         >
           Download
         </button>
       </div>
 
-      {/* ====== Main layout ====== */}
+      {/* ====== Main Layout ====== */}
       <div className={styles.docGrid}>
-        <div className={styles.agentBox}>
+        <div>
           <AgentBox
             documentId={String(doc.id)}
             documentContent={doc.content}
@@ -197,7 +173,7 @@ export default function DocumentPage() {
           <Preview content={doc.content} />
         </div>
 
-        <div className={styles.policiesWrap}>
+        <div>
           <PoliciesBox value={policies} onChange={setPolicies} />
         </div>
       </div>

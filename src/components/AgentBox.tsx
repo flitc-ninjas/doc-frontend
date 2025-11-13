@@ -1,4 +1,4 @@
-
+// src/components/AgentBox.tsx
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
@@ -25,37 +25,31 @@ export default function AgentBox({
 }: AgentBoxProps) {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>(() => {
-  const saved = localStorage.getItem(`chat-history-${documentId}`);
-  if (saved) return JSON.parse(saved);
+    const saved = localStorage.getItem(`chat-history-${documentId}`);
+    if (saved) return JSON.parse(saved);
 
-  const initialMessage = {
-    role: "assistant",
-    content: `مرحبًا بك! 👋 كيف يمكنني مساعدتك اليوم في إنشاء أو تعديل المستند «${documentTitle || "المستند الحالي"}»؟`,
-  };
-  return [initialMessage];
-});
-
+    const initialMessage = {
+      role: "assistant",
+      content: `مرحبًا بك! 👋 كيف يمكنني مساعدتك اليوم في إنشاء أو تعديل المستند «${documentTitle || "المستند الحالي"}»؟`,
+    };
+    return [initialMessage];
+  });
 
   const [isRunning, setIsRunning] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
-  // ✅ التمرير التلقائي لآخر رسالة
-  useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  useEffect(() => chatEndRef.current?.scrollIntoView({ behavior: "smooth" }), [messages]);
 
-  // 💾 استرجاع المحادثة من التخزين المحلي عند فتح المستند
   useEffect(() => {
     const saved = localStorage.getItem(`chat-history-${documentId}`);
     if (saved) setMessages(JSON.parse(saved));
   }, [documentId]);
 
-  // 💾 حفظ المحادثة في التخزين المحلي
   useEffect(() => {
     localStorage.setItem(`chat-history-${documentId}`, JSON.stringify(messages));
   }, [messages, documentId]);
 
-    async function handleSend() {
+  async function handleSend() {
     if (!input.trim()) return;
 
     const userMessage: Message = { role: "user", content: input };
@@ -69,28 +63,21 @@ export default function AgentBox({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          messages: updatedMessages,       // ✅ السيرفر يحتاج هذه
-          rules: policies || "",           // ✅ بدل policies بـ rules
-          document: documentContent || "", // ✅ نص المستند الحالي
-          document_title: documentTitle || "", // ✅ الاسم الصحيح
+          messages: updatedMessages,
+          rules: policies || "",
+          document: documentContent || "",
+          document_title: documentTitle || "",
         }),
       });
 
       const data = await response.json();
+      if (data.document_update) onApply(data.document_update);
 
-      // ✅ إذا الإيجنت عدّل المستند
-      if (data.document_update) {
-        onApply(data.document_update);
-      }
-
-      // ✅ أضف الرد العادي للمحادثة
       setMessages((prev) => [
         ...prev,
         { role: "assistant", content: data.reply || "لم يتم استلام رد." },
       ]);
-
-    } catch (err) {
-      console.error("Chat error:", err);
+    } catch {
       setMessages((prev) => [
         ...prev,
         { role: "assistant", content: "⚠️ حدث خطأ أثناء الاتصال بالخادم." },
@@ -100,58 +87,57 @@ export default function AgentBox({
     }
   }
 
-
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-      }}
-    >
+    <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
       <h3
         style={{
           margin: "0 0 4px 0",
           padding: 0,
           fontSize: "16px",
           fontWeight: "600",
-          color: "#b2b2ff",
+          color: "#2563eb",
           textAlign: "center",
         }}
       >
         Agent Chat
       </h3>
 
-      {/* ✅ منطقة المحادثة */}
-<div
-  style={{
-    flex: "1 1 auto",
-    overflowY: "auto",
-    maxHeight: "700px", // 👈 يحدد أقصى ارتفاع للمحادثة
-    background: "transparent",
-    border: "1px solid #333",
-    borderRadius: "8px",
-    padding: "10px",
-    color: "white",
-    fontSize: "14px",
-    display: "flex",
-    flexDirection: "column",
-    gap: "8px",
-    scrollBehavior: "smooth",
-  }}
->
+      {/* منطقة المحادثة */}
+      <div
+        style={{
+          flex: "1 1 auto",
+          overflowY: "auto",
+          maxHeight: "700px",
+          background: "#f9fafb",
+          border: "1px solid #cbd5e1",
+          borderRadius: "8px",
+          padding: "10px",
+          color: "#1e293b",
+          fontSize: "14px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "8px",
+          scrollBehavior: "smooth",
+          boxShadow: "0 4px 10px rgba(0, 0, 0, 0.08)",
 
+        }}
+      >
         {messages.map((m, i) => (
           <div
             key={i}
             style={{
               alignSelf: m.role === "user" ? "flex-end" : "flex-start",
-              background: m.role === "user" ? "#6366f1" : "#1f1f1f",
+              background: m.role === "user" ? "#2563eb" : "#e2e8f0",
+              color: m.role === "user" ? "white" : "#1e293b",
               borderRadius: "10px",
               padding: "8px 12px",
               maxWidth: "80%",
               whiteSpace: "pre-wrap",
               lineHeight: "1.6",
+              boxShadow:
+                m.role === "assistant"
+                  ? "0 2px 4px rgba(0,0,0,0.1)"
+                  : "0 2px 6px rgba(37,99,235,0.3)",
             }}
           >
             {m.content}
@@ -160,7 +146,7 @@ export default function AgentBox({
         <div ref={chatEndRef} />
       </div>
 
-      {/* ✅ منطقة الإدخال */}
+      {/* الإدخال */}
       <div style={{ display: "flex", marginTop: "8px", gap: "6px" }}>
         <input
           type="text"
@@ -170,11 +156,11 @@ export default function AgentBox({
           placeholder="اكتب سؤالك أو طلبك هنا..."
           style={{
             flex: 1,
-            background: "transparent",
-            border: "1px solid #333",
+            background: "#f9fafb",
+            border: "1px solid #cbd5e1",
             borderRadius: "6px",
             padding: "8px",
-            color: "white",
+            color: "#1e293b",
             fontSize: "14px",
           }}
         />
@@ -185,7 +171,7 @@ export default function AgentBox({
             padding: "8px 12px",
             borderRadius: "6px",
             border: "none",
-            backgroundColor: isRunning ? "#444" : "#6366f1",
+            backgroundColor: isRunning ? "#94a3b8" : "#2563eb",
             color: "white",
             cursor: isRunning ? "default" : "pointer",
           }}

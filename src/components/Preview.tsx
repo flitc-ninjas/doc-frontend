@@ -1,3 +1,4 @@
+// src/components/Preview.tsx
 "use client";
 
 import React from "react";
@@ -15,33 +16,33 @@ export default function Preview({ content }: PreviewProps) {
   return (
     <div
       style={{
-        border: "1px solid #333",
+        border: "1px solid #cbd5e1",
         borderRadius: 8,
         padding: 20,
         minHeight: 300,
-        backgroundColor: "#0a0a0a",
-        color: "#fff",
+        backgroundColor: "#f9fafb",
+        color: "#1e293b",
         fontFamily: "system-ui, sans-serif",
         direction: "rtl",
         textAlign: "right",
         lineHeight: 1.7,
         overflowY: "scroll",
         scrollbarWidth: "thin",
-        maxHeight: "800px"
-    
+        maxHeight: "800px",
+        boxShadow: "0 4px 10px rgba(0, 0, 0, 0.08)", 
       }}
     >
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw]}
-        skipHtml={false} // 👈 السماح بتنسيق HTML
+        skipHtml={false}
         components={{
           h1: ({ node, ...props }) => (
             <h1
               style={{
                 fontSize: "1.8rem",
-                color: "#b2b2ff",
-                borderBottom: "1px solid #444",
+                color: "#2563eb",
+                borderBottom: "1px solid #cbd5e1",
                 paddingBottom: "6px",
                 marginBottom: "10px",
               }}
@@ -52,7 +53,7 @@ export default function Preview({ content }: PreviewProps) {
             <h2
               style={{
                 fontSize: "1.4rem",
-                color: "#a5a5ff",
+                color: "#334155",
                 marginTop: "12px",
                 marginBottom: "8px",
               }}
@@ -60,13 +61,20 @@ export default function Preview({ content }: PreviewProps) {
             />
           ),
           strong: ({ node, ...props }) => (
-            <strong style={{ color: "#fff", fontWeight: 700 }} {...props} />
+            <strong style={{ color: "#1e293b", fontWeight: 700 }} {...props} />
           ),
           p: ({ node, ...props }) => (
             <p style={{ margin: "8px 0", fontSize: "1rem" }} {...props} />
           ),
           ul: ({ node, ...props }) => (
-            <ul style={{ margin: "8px 0", paddingRight: "20px" }} {...props} />
+            <ul
+              style={{
+                margin: "8px 0",
+                paddingRight: "20px",
+                color: "#1e293b",
+              }}
+              {...props}
+            />
           ),
           li: ({ node, ...props }) => (
             <li style={{ marginBottom: "4px" }} {...props} />

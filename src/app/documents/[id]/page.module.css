@@ -1,38 +1,46 @@
-/* ===== Elegant Layout for Document Editor ===== */
+/* ===== Refined Light Theme Inspired by Labeih ===== */
 
 .doc-page {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #000;
+  background-color: #f7f9fc; /* خلفية فاتحة ناعمة */
   min-height: 100vh;
   padding: 20px 0;
+  font-family: "Segoe UI", "Noto Sans Arabic", sans-serif;
 }
 
 /* الشبكة الرئيسية */
 .docGrid {
   display: grid;
   grid-template-columns:
-    minmax(320px, 1fr)     /* AgentBox - أعرض من الرولز */
-    minmax(640px, 2fr)     /* Preview - أكبر واحد */
-    minmax(260px, 0.8fr);  /* PoliciesBox - أصغر */
+    minmax(320px, 1fr)
+    minmax(640px, 2fr)
+    minmax(260px, 0.8fr);
   gap: 24px;
   align-items: stretch;
   justify-content: center;
   width: 95%;
   max-width: 1400px;
-  height: 85vh; /* يملأ أغلب الصفحة */
+  height: 85vh;
 }
 
 /* الصناديق نفسها */
 .docGrid > div {
-  background: #0d0d0d;
-  border: 1px solid #333;
-  border-radius: 10px;
+  background: #ffffff; /* أبيض */
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
   padding: 16px;
   display: flex;
   flex-direction: column;
-  color: white;
+  color: #1e293b; /* رمادي غامق نص */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.docGrid > div:hover {
+  border-color: #93c5fd; /* أزرق لبيه */
+  box-shadow: 0 4px 12px rgba(147, 197, 253, 0.2);
 }
 
 /* التأكد أن المحتوى يملأ الطول */
@@ -41,13 +49,13 @@
   flex: 1;
   height: 100%;
   background: transparent;
-  color: white;
+  color: #1e293b;
 }
 
 /* تحسين العنوان داخل الصفحة */
 .title h2,
 .title h3,
 .title h4 {
-  color: #b2b2ff;
+  color: #2563eb; /* أزرق أساسي */
   margin-top: 0;
 }
